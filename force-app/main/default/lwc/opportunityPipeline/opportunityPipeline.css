@@ -1,0 +1,99 @@
+.pipeline-board {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    min-height: 500px;
+    align-items: flex-start;
+}
+
+.pipeline-column {
+    min-width: 200px;
+    max-width: 200px;
+    background: #f4f6f9;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.stage-header {
+    background: #0176d3;
+    color: #fff;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.stage-meta {
+    display: block;
+    font-weight: 400;
+    font-size: 0.7rem;
+    opacity: 0.85;
+    margin-top: 2px;
+}
+
+.stage-body {
+    padding: 8px;
+    min-height: 120px;
+    transition: background 0.15s;
+}
+
+.stage-body.drag-over {
+    background: #d0e9ff;
+    border: 2px dashed #0176d3;
+}
+
+.opp-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px;
+    cursor: grab;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 3px solid #0176d3;
+    transition: box-shadow 0.15s;
+}
+
+.opp-card:hover {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.opp-name {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #181818;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.opp-account {
+    font-size: 0.72rem;
+    color: #666;
+    margin-top: 2px;
+}
+
+.opp-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+}
+
+.opp-amount {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #2e7d32;
+}
+
+.opp-close {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.empty-lane {
+    text-align: center;
+    color: #bbb;
+    font-size: 0.75rem;
+    padding: 20px 0;
+    border: 2px dashed #ddd;
+    border-radius: 6px;
+}

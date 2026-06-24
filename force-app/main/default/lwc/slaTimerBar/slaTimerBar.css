@@ -1,0 +1,30 @@
+.sla-container { padding: 8px 12px; }
+
+.sla-label-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.78rem;
+}
+
+.sla-title { font-weight: 700; color: #333; }
+.sla-remaining { color: #555; }
+
+.sla-track {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.sla-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.sla-green  { background: #2e7d32; }
+.sla-amber  { background: #f57c00; }
+.sla-red    { background: #c62828; }
+
+.sla-closed { font-size: 0.78rem; color: #888; padding: 8px 12px; }

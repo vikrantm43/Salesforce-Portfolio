@@ -1,0 +1,16 @@
+<template>
+    <template if:true={showSla}>
+        <div class="sla-container">
+            <div class="sla-label-row">
+                <span class="sla-title">SLA Status</span>
+                <span class="sla-remaining">{remainingLabel}</span>
+            </div>
+            <div class="sla-track">
+                <div class={barClass} style={progressStyle}></div>
+            </div>
+        </div>
+    </template>
+    <template if:true={isClosed}>
+        <div class="sla-closed">Case closed — SLA tracking stopped.</div>
+    </template>
+</template>

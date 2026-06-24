@@ -1,0 +1,63 @@
+<template>
+    <lightning-card title="Case Escalation Dashboard" icon-name="standard:case">
+
+        <div class="slds-grid slds-gutters slds-p-horizontal_medium slds-p-top_small">
+            <div class="slds-col slds-size_1-of-3">
+                <div class="kpi-tile tile-total">
+                    <p class="tile-label">Total Escalated</p>
+                    <p class="tile-value">{totalEscalated}</p>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-3">
+                <div class="kpi-tile tile-critical">
+                    <p class="tile-label">Critical</p>
+                    <p class="tile-value">{criticalCount}</p>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-3">
+                <div class="kpi-tile tile-high">
+                    <p class="tile-label">High Priority</p>
+                    <p class="tile-value">{highCount}</p>
+                </div>
+            </div>
+        </div>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." size="small"></lightning-spinner>
+        </template>
+
+        <div class="slds-p-around_medium">
+            <lightning-datatable
+                key-field="Id"
+                data={cases}
+                columns={columns}
+                onrowaction={handleRowAction}
+                hide-checkbox-column>
+            </lightning-datatable>
+        </div>
+
+        <template if:true={showReassignModal}>
+            <section class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-modal__title">Reassign Case</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-record-picker
+                            label="New Owner"
+                            placeholder="Search users..."
+                            object-api-name="User"
+                            onchange={handleOwnerChange}>
+                        </lightning-record-picker>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Cancel" onclick={handleReassignCancel}></lightning-button>
+                        <lightning-button variant="brand" label="Confirm" onclick={handleReassignConfirm}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+    </lightning-card>
+</template>

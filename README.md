@@ -22,15 +22,32 @@ Senior Salesforce developer and consultant with 7+ years delivering enterprise-g
 
 ## Portfolio Projects
 
+### Service Cloud
+
 | # | Project | Tech | Highlights |
 |---|---------|------|------------|
-| 1 | [Account Health Dashboard LWC](#1-account-health-dashboard-lwc) | LWC, Apex, SOQL | Real-time KPI dashboard with dynamic charts |
-| 2 | [Case Timeline Component](#2-case-timeline-component) | LWC, Lightning Message Service | Visual case activity timeline |
+| 1 | [Account Health Dashboard LWC](#1-account-health-dashboard-lwc) | LWC, Apex, SOQL | Real-time KPI dashboard with wire + LMS |
+| 2 | [Case Timeline Component](#2-case-timeline-component) | LWC, LMS | Visual case activity timeline |
 | 3 | [Pre-Chat Form — Digital Engagement](#3-pre-chat-form--digital-engagement) | LWC, MIAW | Custom pre-chat improving FCR rates |
-| 4 | [Apex Trigger Framework](#4-apex-trigger-framework) | Apex, Design Patterns | Scalable handler-based trigger architecture |
-| 5 | [REST API Integration Service](#5-rest-api-integration-service) | Apex, REST API, Named Credentials | Async callout with retry and error handling |
-| 6 | [Agentforce Agent Action — Knowledge Curator](#6-agentforce-agent-action--knowledge-curator) | Agentforce, Apex, Einstein | AI-driven knowledge article workflow |
-| 7 | [Omnichannel Capacity Utility](#7-omnichannel-capacity-utility) | Apex, Omnichannel | Dynamic capacity threshold management |
+| 4 | [SLA Timer Bar](#4-sla-timer-bar) | LWC, EntitlementProcess | Live SLA countdown with breach alerting |
+| 5 | [Case Escalation Dashboard](#5-case-escalation-dashboard) | LWC, Apex, Datatable | Real-time escalation monitor with reassign |
+| 6 | [Case Auto-Close Batch](#6-case-auto-close-batch) | Apex Batch, Scheduler, Custom Metadata | Nightly auto-close for stale pending cases |
+| 7 | [Agentforce Knowledge Curator](#7-agentforce-agent-action--knowledge-curator) | Agentforce, Apex, Einstein GenAI | AI-driven KB article workflow |
+| 8 | [Omnichannel Capacity Utility](#8-omnichannel-capacity-utility) | Apex, Omnichannel | Dynamic capacity threshold management |
+
+### Sales Cloud
+
+| # | Project | Tech | Highlights |
+|---|---------|------|------------|
+| 9  | [Opportunity Pipeline Board](#9-opportunity-pipeline-board) | LWC, Apex, Drag & Drop | Kanban pipeline with drag-to-stage updates |
+| 10 | [Lead Scoring Service](#10-lead-scoring-service) | Apex, InvocableMethod, Flow | Firmographic scoring engine with A–D grades |
+
+### Platform
+
+| # | Project | Tech | Highlights |
+|---|---------|------|------------|
+| 11 | [Apex Trigger Framework](#11-apex-trigger-framework) | Apex, Design Patterns, Custom Metadata | Handler pattern with metadata bypass |
+| 12 | [REST API Integration Service](#12-rest-api-integration-service) | Apex, Queueable, Named Credentials | Async callout with retry and error logging |
 
 ---
 
@@ -94,7 +111,57 @@ An invocable Apex action that powers an Agentforce agent to automatically draft,
 
 ---
 
-## 7. Omnichannel Capacity Utility
+## 4. SLA Timer Bar
+
+**`force-app/main/default/lwc/slaTimerBar`**
+
+A live SLA countdown component that renders on any Case record page. Reads `SlaStartDate` and `SlaExitDate` via wire and ticks every minute. Bar turns amber at 75% elapsed and red on breach — stops tracking when the case is closed.
+
+**Key techniques:** `@wire(getRecord)`, `setInterval`, dynamic CSS class binding, `SlaStartDate`/`SlaExitDate` entitlement fields
+
+---
+
+## 5. Case Escalation Dashboard
+
+**`force-app/main/default/lwc/caseEscalationDashboard`**
+
+Real-time dashboard surfacing all escalated or overdue high/critical cases. Supports inline reassignment via a modal and one-click escalation to management queue. Built for Service Cloud console supervisor view.
+
+**Key techniques:** `lightning-datatable` row actions, modal pattern, `refreshApex`, `NavigationMixin`, wrapper class with dynamic CSS
+
+---
+
+## 6. Case Auto-Close Batch
+
+**`force-app/main/default/classes/CaseAutoCloseBatch.cls`**
+
+Nightly scheduled batch that auto-closes cases stuck in "Pending Customer" status beyond a configurable window (default: 7 days). Window is driven by Custom Metadata, requires zero code changes to reconfigure. Posts a public case comment and sends a summary email on completion.
+
+**Key techniques:** `Database.Batchable`, `Database.Stateful`, `Schedulable`, `Custom Metadata`, partial DML with `Database.update(false)`
+
+---
+
+## 9. Opportunity Pipeline Board
+
+**`force-app/main/default/lwc/opportunityPipeline`**
+
+A Kanban-style drag-and-drop pipeline board for Sales Cloud. Reps can drag opportunity cards between stages — each drop fires an Apex update and refreshes the wire cache. Displays deal count and total pipeline value per stage with currency formatting.
+
+**Key techniques:** HTML5 Drag & Drop API, `NavigationMixin`, `refreshApex`, `Intl.NumberFormat`, wrapper class for LWC-safe data
+
+---
+
+## 10. Lead Scoring Service
+
+**`force-app/main/default/classes/LeadScoringService.cls`**
+
+An `@InvocableMethod` lead scoring engine that calculates a 0–100 score and A–D grade based on industry, job title seniority, company size, contact completeness, annual revenue, and lead source. Callable from Flow or Agentforce actions. Results are persisted directly to the Lead record.
+
+**Key techniques:** `@InvocableMethod`, firmographic scoring weights, `@InvocableVariable`, flow-callable, 90%+ test coverage
+
+---
+
+## 7. Agentforce Agent Action — Knowledge Curator
 
 **`force-app/main/default/classes/OmnichannelCapacityUtil.cls`**
 
