@@ -1,0 +1,86 @@
+<template>
+    <div class="prechat-container">
+        <div class="prechat-header">
+            <h2>Welcome! Let's get you connected.</h2>
+            <p>Please fill in your details so we can route you to the right specialist.</p>
+        </div>
+
+        <div class="prechat-form">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input
+                        label="First Name"
+                        data-field="firstName"
+                        value={formData.firstName}
+                        message-when-value-missing="First name is required."
+                        class={isFirstNameInvalid}
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                    <template if:true={errors.firstName}>
+                        <p class="field-error">{errors.firstName}</p>
+                    </template>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input
+                        label="Last Name"
+                        data-field="lastName"
+                        value={formData.lastName}
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                    <template if:true={errors.lastName}>
+                        <p class="field-error">{errors.lastName}</p>
+                    </template>
+                </div>
+            </div>
+
+            <lightning-input
+                type="email"
+                label="Email Address"
+                data-field="email"
+                value={formData.email}
+                onchange={handleInputChange}>
+            </lightning-input>
+            <template if:true={errors.email}>
+                <p class="field-error">{errors.email}</p>
+            </template>
+
+            <lightning-input
+                label="Case Number (if existing)"
+                data-field="caseNumber"
+                value={formData.caseNumber}
+                onchange={handleInputChange}
+                placeholder="Optional">
+            </lightning-input>
+
+            <lightning-combobox
+                label="Issue Category"
+                data-field="issueCategory"
+                value={formData.issueCategory}
+                options={categoryOptions}
+                onchange={handleInputChange}
+                placeholder="Select a category">
+            </lightning-combobox>
+            <template if:true={errors.issueCategory}>
+                <p class="field-error">{errors.issueCategory}</p>
+            </template>
+
+            <lightning-textarea
+                label="Brief Description"
+                data-field="description"
+                value={formData.description}
+                max-length="500"
+                onchange={handleInputChange}
+                placeholder="Briefly describe your issue...">
+            </lightning-textarea>
+
+            <div class="prechat-actions">
+                <lightning-button
+                    variant="brand"
+                    label={isSubmitting ? 'Connecting...' : 'Start Chat'}
+                    disabled={isSubmitting}
+                    onclick={handleSubmit}>
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,47 @@
+<template>
+    <lightning-card title="Account Health Dashboard" icon-name="standard:account">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+
+        <template if:true={hasError}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span>{error}</span>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+
+                <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="kpi-card">
+                        <p class="kpi-label">Open Cases</p>
+                        <p class="kpi-value">{openCasesCount}</p>
+                    </div>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="kpi-card">
+                        <p class="kpi-label">Open Opportunities</p>
+                        <p class="kpi-value">{openOpportunitiesCount}</p>
+                    </div>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-4">
+                    <div class={npsClass}>
+                        <p class="kpi-label">NPS Score</p>
+                        <p class="kpi-value">{npsScore}</p>
+                    </div>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="kpi-card">
+                        <p class="kpi-label">Account</p>
+                        <p class="kpi-value kpi-name">{accountName}</p>
+                    </div>
+                </div>
+
+            </div>
+        </template>
+    </lightning-card>
+</template>

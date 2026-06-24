@@ -1,0 +1,29 @@
+.kpi-card {
+    background: #f3f3f3;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    border-left: 4px solid #0176d3;
+}
+
+.kpi-good { border-left-color: #2e7d32; background: #e8f5e9; }
+.kpi-neutral { border-left-color: #f57c00; background: #fff3e0; }
+.kpi-bad { border-left-color: #c62828; background: #ffebee; }
+
+.kpi-label {
+    font-size: 0.75rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.kpi-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #181818;
+}
+
+.kpi-name {
+    font-size: 1rem;
+}
