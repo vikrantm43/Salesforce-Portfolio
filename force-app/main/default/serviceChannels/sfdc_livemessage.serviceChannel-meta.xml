@@ -4,6 +4,6 @@
     <hasAfterConvoWorkTimer>false</hasAfterConvoWorkTimer>
     <hasAutoAcceptEnabled>false</hasAutoAcceptEnabled>
     <isInterruptible>false</isInterruptible>
-    <label>Chat Service Channel</label>
-    <relatedEntityType>ContactRequest</relatedEntityType>
+    <label>Messaging</label>
+    <relatedEntityType>MessagingSession</relatedEntityType>
 </ServiceChannel>

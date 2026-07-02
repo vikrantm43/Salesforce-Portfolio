@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QueueRoutingConfig xmlns="http://soap.sforce.com/2006/04/metadata">
-    <capacityWeight>1.00</capacityWeight>
-    <dropAdditionalSkillsTimeout>30</dropAdditionalSkillsTimeout>
+    <capacityType>INHERITED</capacityType>
+    <capacityWeight>1.0</capacityWeight>
     <isAttributeBased>false</isAttributeBased>
     <label>Tier One Routing Config</label>
-    <pushTimeout>120</pushTimeout>
-    <routingModel>LeastActive</routingModel>
-    <skillBased>true</skillBased>
+    <routingModel>LEAST_ACTIVE</routingModel>
+    <routingPriority>1</routingPriority>
 </QueueRoutingConfig>

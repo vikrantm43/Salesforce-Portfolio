@@ -3,7 +3,7 @@
     <capacityType>INHERITED</capacityType>
     <capacityWeight>2.0</capacityWeight>
     <isAttributeBased>false</isAttributeBased>
-    <label>Tier Two Escalation Config</label>
+    <label>ESA Routing Configuration</label>
     <routingModel>MOST_AVAILABLE</routingModel>
-    <routingPriority>2</routingPriority>
+    <routingPriority>1</routingPriority>
 </QueueRoutingConfig>
