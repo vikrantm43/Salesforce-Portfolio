@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QueueRoutingConfig xmlns="http://soap.sforce.com/2006/04/metadata">
+    <capacityWeight>2.00</capacityWeight>
+    <dropAdditionalSkillsTimeout>60</dropAdditionalSkillsTimeout>
+    <isAttributeBased>false</isAttributeBased>
+    <label>Tier Two Escalation Config</label>
+    <overflowAssignee>support-tier2@example.com</overflowAssignee>
+    <priority>2</priority>
+    <pushTimeout>60</pushTimeout>
+    <queueOverflowAssignee>support-tier2@example.com</queueOverflowAssignee>
+    <routingModel>MostAvailable</routingModel>
+    <skillBased>true</skillBased>
+</QueueRoutingConfig>

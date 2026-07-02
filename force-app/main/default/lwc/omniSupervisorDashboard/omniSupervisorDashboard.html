@@ -1,0 +1,90 @@
+<template>
+    <lightning-card title="Omnichannel Supervisor Dashboard" icon-name="standard:service_resource">
+
+        <!-- Queue selector + Refresh -->
+        <div slot="actions">
+            <lightning-combobox
+                label="Queue"
+                variant="label-hidden"
+                value={selectedQueue}
+                options={queueOptions}
+                onchange={handleQueueChange}>
+            </lightning-combobox>
+            <lightning-button-icon
+                icon-name="utility:refresh"
+                alternative-text="Refresh"
+                class="slds-m-left_x-small"
+                disabled={isRefreshing}
+                onclick={handleRefresh}>
+            </lightning-button-icon>
+        </div>
+
+        <div class="slds-p-around_medium">
+
+            <!-- Queue KPI tiles -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-4">
+                    <div class={pendingBadgeClass}>
+                        <p class="kpi-label">Pending Cases</p>
+                        <p class="kpi-value">{pendingCount}</p>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="kpi-card">
+                        <p class="kpi-label">Avg Age (hrs)</p>
+                        <p class="kpi-value">{avgAge}</p>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="kpi-card">
+                        <p class="kpi-label">Max Age (hrs)</p>
+                        <p class="kpi-value">{maxAge}</p>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="kpi-card kpi-good">
+                        <p class="kpi-label">Available Agents</p>
+                        <p class="kpi-value">{availableAgents} / {totalAgents}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent summary badges -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col">
+                    <span class="slds-badge slds-badge_success slds-m-right_x-small">
+                        Available: {availableAgents}
+                    </span>
+                    <span class="slds-badge slds-badge_lightest slds-m-right_x-small">
+                        Away: {awayAgents}
+                    </span>
+                    <span class="slds-badge slds-theme_error">
+                        At Capacity: {fullAgents}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+
+            <!-- Agent capacity table -->
+            <template lwc:elseif={hasAgents}>
+                <lightning-datatable
+                    key-field="userId"
+                    data={agents}
+                    columns={agentColumns}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+
+            <template lwc:else>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <p class="slds-text-color_weak">No agents currently online for <strong>{queueLabel}</strong>.</p>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

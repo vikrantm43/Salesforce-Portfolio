@@ -1,0 +1,27 @@
+.kpi-card {
+    background: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+    min-height: 5rem;
+}
+
+.kpi-good    { border-top: 4px solid #2e844a; }
+.kpi-neutral { border-top: 4px solid #f4bc25; }
+.kpi-bad     { border-top: 4px solid #ba0517; }
+
+.kpi-label {
+    font-size: 0.75rem;
+    color: #706e6b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.kpi-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #032d60;
+    line-height: 1;
+}
