@@ -3,44 +3,46 @@ private class OmniChannelRoutingServiceTest {
 
     @TestSetup
     static void setup() {
-        Account acc = new Account(Name = 'Test Corp', Customer_Tier__c = 'VIP');
+        Account acc = new Account(Name = 'Test Corp', Rating = 'Hot');
         insert acc;
 
         List<Case> cases = new List<Case>{
-            new Case(Subject = 'Critical Case',  Priority = 'Critical', Status = 'New',
-                     Origin = 'Phone',  AccountId = acc.Id),
-            new Case(Subject = 'Standard Case',  Priority = 'Medium',   Status = 'New',
-                     Origin = 'Web',    AccountId = acc.Id),
-            new Case(Subject = 'Chat Case',      Priority = 'Low',      Status = 'New',
-                     Origin = 'Chat',   AccountId = acc.Id)
+            new Case(Subject = 'Critical Case', Priority = 'Critical', Status = 'New',
+                     Origin = 'Phone', AccountId = acc.Id),
+            new Case(Subject = 'Standard Case', Priority = 'Medium',  Status = 'New',
+                     Origin = 'Web',   AccountId = acc.Id),
+            new Case(Subject = 'Chat Case',     Priority = 'Low',     Status = 'New',
+                     Origin = 'Chat',  AccountId = acc.Id)
         };
         insert cases;
     }
 
     @IsTest
-    static void testResolveChannelName_CaseOrigin() {
+    static void testRouteCases_PhoneOrigin() {
         Case c = [SELECT Id FROM Case WHERE Subject = 'Critical Case' LIMIT 1];
-        Test.startTest();
         OmniChannelRoutingService.RoutingRequest req = new OmniChannelRoutingService.RoutingRequest();
         req.caseId = c.Id;
-        // Channel resolution is internal — verify no exception on standard origin
+
+        Test.startTest();
         List<OmniChannelRoutingService.RoutingResult> results =
             OmniChannelRoutingService.routeCases(new List<OmniChannelRoutingService.RoutingRequest>{ req });
         Test.stopTest();
-        // Without real queue/channel setup in test, isSuccess may be false — verify graceful error handling
+
         System.assertEquals(1, results.size());
         System.assertNotEquals(null, results[0]);
     }
 
     @IsTest
-    static void testResolveChannelName_ChatOrigin() {
+    static void testRouteCases_ChatOrigin() {
         Case c = [SELECT Id FROM Case WHERE Subject = 'Chat Case' LIMIT 1];
-        Test.startTest();
         OmniChannelRoutingService.RoutingRequest req = new OmniChannelRoutingService.RoutingRequest();
         req.caseId = c.Id;
+
+        Test.startTest();
         List<OmniChannelRoutingService.RoutingResult> results =
             OmniChannelRoutingService.routeCases(new List<OmniChannelRoutingService.RoutingRequest>{ req });
         Test.stopTest();
+
         System.assertEquals(1, results.size());
     }
 
@@ -118,9 +120,8 @@ private class OmniChannelRoutingServiceTest {
         insert q;
 
         Account acc = [SELECT Id FROM Account WHERE Name = 'Test Corp' LIMIT 1];
-        Case c = new Case(Subject = 'Queue Case', Status = 'New', Priority = 'Low',
-                          Origin = 'Phone', OwnerId = q.Id, AccountId = acc.Id);
-        insert c;
+        insert new Case(Subject = 'Queue Case', Status = 'New', Priority = 'Low',
+                        Origin = 'Phone', OwnerId = q.Id, AccountId = acc.Id);
 
         Test.startTest();
         OmniChannelRoutingService.QueueStatsWrapper stats =
@@ -132,16 +133,6 @@ private class OmniChannelRoutingServiceTest {
     }
 
     @IsTest
-    static void testInvocableVariables_CorrectTypes() {
-        OmniChannelRoutingService.RoutingResult r = new OmniChannelRoutingService.RoutingResult();
-        r.isSuccess = true;
-        r.priority  = 1;
-        r.queueName = 'Tier_One_Support';
-        System.assertEquals(true, r.isSuccess);
-        System.assertEquals(1, r.priority);
-    }
-
-    @IsTest
     static void testWrapperDefaults() {
         OmniChannelRoutingService.QueueStatsWrapper stats = new OmniChannelRoutingService.QueueStatsWrapper();
         System.assertEquals(0, stats.pendingCount);
@@ -149,5 +140,15 @@ private class OmniChannelRoutingServiceTest {
 
         OmniChannelRoutingService.AgentCapacityWrapper cap = new OmniChannelRoutingService.AgentCapacityWrapper();
         System.assertEquals(null, cap.userId);
+    }
+
+    @IsTest
+    static void testInvocableVariables() {
+        OmniChannelRoutingService.RoutingResult r = new OmniChannelRoutingService.RoutingResult();
+        r.isSuccess = true;
+        r.priority  = 1;
+        r.queueName = 'Tier_One_Support';
+        System.assertEquals(true, r.isSuccess);
+        System.assertEquals(1, r.priority);
     }
 }

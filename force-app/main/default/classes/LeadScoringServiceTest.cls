@@ -47,11 +47,11 @@ private class LeadScoringServiceTest {
         Lead l = [SELECT Id FROM Lead WHERE LastName = 'Score' AND FirstName = 'High' LIMIT 1];
 
         Test.startTest();
-        LeadScoringService.scoreLeads(new List<Id>{ l.Id });
+        List<LeadScoringService.LeadScoreResult> results = LeadScoringService.scoreLeads(new List<Id>{ l.Id });
         Test.stopTest();
 
-        Lead updated = [SELECT Lead_Score__c, Lead_Grade__c FROM Lead WHERE Id = :l.Id];
-        System.assertNotEquals(null, updated.Lead_Score__c, 'Score should be persisted');
-        System.assertNotEquals(null, updated.Lead_Grade__c, 'Grade should be persisted');
+        Lead updated = [SELECT Rating, Description FROM Lead WHERE Id = :l.Id];
+        System.assertEquals('Hot', updated.Rating, 'Grade A lead should be rated Hot');
+        System.assert(updated.Description.contains('Grade: A'), 'Description should contain grade');
     }
 }

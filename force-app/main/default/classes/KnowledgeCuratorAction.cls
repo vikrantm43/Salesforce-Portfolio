@@ -12,27 +12,26 @@ public with sharing class KnowledgeCuratorAction {
             Output output = new Output();
             try {
                 Case c = [
-                    SELECT Id, Subject, Description, Resolution__c, Product__c
+                    SELECT Id, Subject, Description, CaseNumber
                     FROM Case
                     WHERE Id = :input.caseId
                     LIMIT 1
                 ];
 
-                String prompt = buildPrompt(c);
-                String draftContent = callEinsteinGenAI(prompt);
+                String draftContent = buildDraft(c);
 
-                Knowledge__kav article = new Knowledge__kav(
-                    Title      = 'KB: ' + c.Subject,
-                    Summary__c = draftContent.abbreviate(255),
-                    Answer__c  = draftContent,
-                    Language   = 'en_US',
-                    VersionData = Blob.valueOf(draftContent)
+                Task draftTask = new Task(
+                    Subject      = 'KB Draft: ' + c.Subject,
+                    Description  = draftContent,
+                    Status       = 'Not Started',
+                    Priority     = 'Normal',
+                    WhatId       = c.Id
                 );
-                insert article;
+                insert draftTask;
 
-                output.articleId = article.Id;
+                output.articleId = draftTask.Id;
                 output.isSuccess = true;
-                output.message   = 'Knowledge article drafted and submitted for review.';
+                output.message   = 'Knowledge draft created and linked to case.';
             } catch (Exception e) {
                 output.isSuccess = false;
                 output.message   = 'Error: ' + e.getMessage();
@@ -42,22 +41,13 @@ public with sharing class KnowledgeCuratorAction {
         return outputs;
     }
 
-    private static String buildPrompt(Case c) {
-        return 'You are a Salesforce knowledge base author. '
-            + 'Based on the following resolved support case, write a concise, helpful Knowledge Article '
-            + 'that can assist other customers facing the same issue.\n\n'
-            + 'Subject: ' + c.Subject + '\n'
-            + 'Description: ' + c.Description + '\n'
-            + 'Resolution: ' + c.Resolution__c + '\n\n'
-            + 'Format: Problem Summary, Root Cause, Resolution Steps, Prevention Tips.';
-    }
-
-    private static String callEinsteinGenAI(String prompt) {
-        ConnectApi.EinsteinLLMGenerationsInput input = new ConnectApi.EinsteinLLMGenerationsInput();
-        input.promptTextorId = prompt;
-        ConnectApi.EinsteinLLMGenerationsOutput output =
-            ConnectApi.EinsteinAI.generateMessages('sfdc_ai__DefaultGPT4Omni', input);
-        return output.generations[0].text;
+    private static String buildDraft(Case c) {
+        return '## Problem Summary\n'
+            + (String.isNotBlank(c.Subject) ? c.Subject : 'N/A') + '\n\n'
+            + '## Description\n'
+            + (String.isNotBlank(c.Description) ? c.Description : 'N/A') + '\n\n'
+            + '## Resolution Steps\n[Document resolution steps here]\n\n'
+            + '## Prevention Tips\n[Document prevention tips here]';
     }
 
     public class Input {

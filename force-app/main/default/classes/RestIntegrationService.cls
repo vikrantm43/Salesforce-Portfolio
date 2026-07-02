@@ -59,14 +59,20 @@ public class RestIntegrationService implements Queueable, Database.AllowsCallout
     }
 
     private void logResponse(IntegrationResponse response) {
-        Integration_Log__c log = new Integration_Log__c(
-            Related_Record_Id__c = relatedRecordId,
-            Endpoint__c          = endpoint,
-            Status_Code__c       = response.statusCode,
-            Response_Body__c     = response.responseBody?.abbreviate(131072),
-            Is_Success__c        = response.isSuccess,
-            Error_Message__c     = response.errorMessage,
-            Retry_Count__c       = retryCount
+        String logBody = 'Endpoint: ' + endpoint
+            + '\nStatus: '  + response.statusCode
+            + '\nSuccess: ' + response.isSuccess
+            + '\nRetries: ' + retryCount
+            + (String.isNotBlank(response.errorMessage) ? '\nError: ' + response.errorMessage : '')
+            + (String.isNotBlank(response.responseBody)
+                ? '\nResponse: ' + response.responseBody.abbreviate(10000) : '');
+
+        Task log = new Task(
+            Subject      = 'Integration Log: ' + endpoint,
+            Description  = logBody,
+            Status       = response.isSuccess ? 'Completed' : 'In Progress',
+            Priority     = response.isSuccess ? 'Normal' : 'High',
+            WhatId       = relatedRecordId
         );
         insert log;
     }

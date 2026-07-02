@@ -4,10 +4,7 @@
     <dropAdditionalSkillsTimeout>30</dropAdditionalSkillsTimeout>
     <isAttributeBased>false</isAttributeBased>
     <label>Tier One Routing Config</label>
-    <overflowAssignee>support-tier1@example.com</overflowAssignee>
-    <priority>1</priority>
     <pushTimeout>120</pushTimeout>
-    <queueOverflowAssignee>support-tier1@example.com</queueOverflowAssignee>
     <routingModel>LeastActive</routingModel>
     <skillBased>true</skillBased>
 </QueueRoutingConfig>

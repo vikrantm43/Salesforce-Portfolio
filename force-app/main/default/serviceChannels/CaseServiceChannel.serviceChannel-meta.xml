@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ServiceChannel xmlns="http://soap.sforce.com/2006/04/metadata">
-    <channelLabel>Cases</channelLabel>
-    <relatedEntity>Case</relatedEntity>
-    <enableAutoGuide>false</enableAutoGuide>
-    <interactionComponent>slaTimerBar</interactionComponent>
     <label>Case Service Channel</label>
 </ServiceChannel>

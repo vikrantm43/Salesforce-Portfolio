@@ -26,8 +26,7 @@ public with sharing class LeadScoringService {
     public static List<LeadScoreResult> scoreLeads(List<Id> leadIds) {
         List<Lead> leads = [
             SELECT Id, Industry, Title, NumberOfEmployees, LeadSource,
-                   Email, Phone, Website, AnnualRevenue,
-                   NumberOfEmployees
+                   Email, Phone, Website, AnnualRevenue
             FROM Lead
             WHERE Id IN :leadIds
         ];
@@ -36,21 +35,20 @@ public with sharing class LeadScoringService {
         List<Lead> toUpdate = new List<Lead>();
 
         for (Lead l : leads) {
-            Integer score = computeScore(l);
-            String  grade = getGrade(score);
+            Integer score  = computeScore(l);
+            String  grade  = getGrade(score);
+            String  rating = gradeToRating(grade);
 
             toUpdate.add(new Lead(
-                Id = l.Id,
-                Lead_Score__c = score,
-                Lead_Grade__c = grade
+                Id          = l.Id,
+                Rating      = rating,
+                Description = 'Lead Score: ' + score + ' | Grade: ' + grade
             ));
 
             results.add(new LeadScoreResult(l.Id, score, grade));
         }
 
-        if (!toUpdate.isEmpty()) {
-            update toUpdate;
-        }
+        if (!toUpdate.isEmpty()) update toUpdate;
 
         return results;
     }
@@ -97,6 +95,12 @@ public with sharing class LeadScoringService {
         if (score >= 60) return 'B';
         if (score >= 40) return 'C';
         return 'D';
+    }
+
+    private static String gradeToRating(String grade) {
+        if (grade == 'A') return 'Hot';
+        if (grade == 'B') return 'Warm';
+        return 'Cold';
     }
 
     private static String getEmployeeRange(Integer count) {

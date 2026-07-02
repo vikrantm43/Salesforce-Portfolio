@@ -18,16 +18,16 @@ public with sharing class AccountDashboardController {
             WHERE AccountId = :accountId AND IsClosed = false
         ]);
 
-        List<AggregateResult> npsResult = [
-            SELECT AVG(NPS_Score__c) avgNps
+        AggregateResult[] caseAgeResult = [
+            SELECT COUNT(Id) closedCount
             FROM Case
             WHERE AccountId = :accountId
-            AND NPS_Score__c != null
-            AND CreatedDate = LAST_N_DAYS:90
+            AND IsClosed = true
+            AND ClosedDate = LAST_N_DAYS:90
         ];
 
-        if (!npsResult.isEmpty() && npsResult[0].get('avgNps') != null) {
-            kpis.put('npsScore', ((Decimal) npsResult[0].get('avgNps')).setScale(1));
+        if (!caseAgeResult.isEmpty() && caseAgeResult[0].get('closedCount') != null) {
+            kpis.put('npsScore', (Integer) caseAgeResult[0].get('closedCount'));
         } else {
             kpis.put('npsScore', null);
         }

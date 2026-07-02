@@ -4,10 +4,7 @@
     <dropAdditionalSkillsTimeout>60</dropAdditionalSkillsTimeout>
     <isAttributeBased>false</isAttributeBased>
     <label>Tier Two Escalation Config</label>
-    <overflowAssignee>support-tier2@example.com</overflowAssignee>
-    <priority>2</priority>
     <pushTimeout>60</pushTimeout>
-    <queueOverflowAssignee>support-tier2@example.com</queueOverflowAssignee>
     <routingModel>MostAvailable</routingModel>
     <skillBased>true</skillBased>
 </QueueRoutingConfig>

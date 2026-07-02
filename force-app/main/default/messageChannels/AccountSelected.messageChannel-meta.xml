@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>AccountSelected</masterLabel>
+    <isExposed>true</isExposed>
+    <description>Publishes the selected Account Id to subscriber LWC components.</description>
+    <lightningMessageFields>
+        <fieldName>accountId</fieldName>
+        <description>The Id of the selected Account</description>
+    </lightningMessageFields>
+</LightningMessageChannel>
