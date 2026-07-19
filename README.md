@@ -48,6 +48,7 @@ Senior Salesforce developer and consultant with 7+ years delivering enterprise-g
 |---|---------|------|------------|
 | 11 | [Apex Trigger Framework](#11-apex-trigger-framework) | Apex, Design Patterns, Custom Metadata | Handler pattern with metadata bypass |
 | 12 | [REST API Integration Service](#12-rest-api-integration-service) | Apex, Queueable, Named Credentials | Async callout with retry and error logging |
+| 13 | [Real-Time Order Integration Hub](#13-real-time-order-integration-hub) | Platform Events, LWC empApi, Apex, PlatformEventSubscriberConfig | High-volume PE end-to-end: publish, partition, deduplicate, monitor |
 
 ---
 
@@ -171,6 +172,30 @@ Utility class to dynamically query and adjust Omnichannel service channel capaci
 
 ---
 
+---
+
+## 13. Real-Time Order Integration Hub
+
+**`force-app/main/default/objects/OrderStatusEvent__e`**  
+**`force-app/main/default/triggers/OrderStatusEventTrigger.trigger`**  
+**`force-app/main/default/classes/OrderEventHandler.cls`**  
+**`force-app/main/default/classes/OrderEventPublisher.cls`**  
+**`force-app/main/default/lwc/orderEventMonitor`**  
+**`force-app/main/default/platformEventSubscriberConfigs/OrderStatusEventConfig.platformEventSubscriberConfig-meta.xml`**
+
+A complete High-Volume Platform Events integration stack for real-time order status propagation from external systems (OMS/ERP) into Salesforce. Covers the full lifecycle: event definition → partitioned subscriber config → bulkified Apex handler with EventUuid deduplication → LWC live feed monitor.
+
+**Architecture:**
+- `OrderStatusEvent__e` — High-Volume custom Platform Event with 7 fields including `OrderId__c` (partition key)
+- `PlatformEventSubscriberConfig` — 4 partitions keyed on `OrderId__c`, guaranteeing per-order event ordering with parallel throughput
+- `OrderEventHandler` — bulkified handler: deduplicates via `EventUuid` (SOQL check against `OrderEventLog__c`), bulk-fetches Order records, updates status, logs every event with full status taxonomy (`PROCESSED`, `SKIPPED_DUPLICATE`, `INVALID_PAYLOAD`, `ORDER_NOT_FOUND`, `DML_ERROR`)
+- `OrderEventPublisher` — `@InvocableMethod` publisher callable from Flow, Agentforce, or Apex; also exposes a bulk API for high-throughput callers
+- `orderEventMonitor` LWC — empApi subscriber with connect/disconnect toggle, status filter combobox, live event feed with icon-coded status transitions, ReplayId and EventUuid surfaced per event
+
+**Key techniques:** `EventBus.publish()`, `lightning/empApi` subscribe/unsubscribe, `PlatformEventSubscriberConfig` partition key, `EventUuid` deduplication pattern, `PublishAfterCommit` behavior, `@InvocableMethod`, bulkified DML with `Database.update(false)`, 90%+ test coverage (happy path, bulk 200 events, duplicate skip, invalid payload, order not found)
+
+---
+
 ## Certifications — 8 Active
 
 | Certification | Status |
@@ -197,3 +222,4 @@ Integration:    REST API · SOAP API · Bulk API · Named Credentials · Connect
 DevOps:         Git · Azure DevOps · SFDX · Copado · Flosum · VS Code
 Testing:        Apex Test Classes (90%+) · Jest · Debug Logs
 ```
+
