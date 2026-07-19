@@ -1,0 +1,80 @@
+<template>
+    <lightning-card title="Order Status Event Monitor" icon-name="utility:broadcast">
+
+        <!-- ── Toolbar ───────────────────────────────────────────────── -->
+        <div slot="actions">
+            <lightning-button
+                label={connectLabel}
+                variant={connectVariant}
+                onclick={handleToggleConnect}
+                class="slds-m-right_x-small">
+            </lightning-button>
+            <lightning-button
+                label="Clear"
+                onclick={handleClear}
+                disabled={isConnected}>
+            </lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+
+            <!-- ── Status bar ─────────────────────────────────────────── -->
+            <div class="slds-m-bottom_small slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                <span class={connectedBadge}>{statusMessage}</span>
+                <lightning-combobox
+                    label="Filter by Status"
+                    variant="label-hidden"
+                    value={filterStatus}
+                    options={statusOptions}
+                    onchange={handleFilterChange}
+                    style="width:180px">
+                </lightning-combobox>
+            </div>
+
+            <!-- ── No events placeholder ──────────────────────────────── -->
+            <template if:false={filteredEvents.length}>
+                <div class="slds-illustration slds-illustration_small slds-m-vertical_medium">
+                    <div class="slds-illustration__actions slds-text-align_center">
+                        <lightning-icon icon-name="utility:broadcast" size="large" class="slds-m-bottom_small"></lightning-icon>
+                        <p class="slds-text-heading_medium">No events received yet</p>
+                        <p class="slds-text-body_regular slds-text-color_weak">
+                            Connect to start listening on /event/OrderStatusEvent__e
+                        </p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- ── Event feed ─────────────────────────────────────────── -->
+            <template for:each={filteredEvents} for:item="evt">
+                <div key={evt.replayId} class="slds-box slds-box_x-small slds-m-bottom_x-small slds-grid slds-grid_vertical-align-center">
+
+                    <lightning-icon
+                        icon-name={evt.icon}
+                        size="small"
+                        class="slds-m-right_small">
+                    </lightning-icon>
+
+                    <div class="slds-grow">
+                        <div class="slds-grid slds-grid_align-spread">
+                            <strong>{evt.orderNumber}</strong>
+                            <span class="slds-text-color_weak slds-text-body_small">{evt.receivedAt}</span>
+                        </div>
+                        <div class="slds-text-body_small slds-m-top_xx-small">
+                            <span class="slds-m-right_small">
+                                <strong>Status:</strong> {evt.previousStatus} → {evt.newStatus}
+                            </span>
+                            <span class="slds-m-right_small">
+                                <strong>Source:</strong> {evt.sourceSystem}
+                            </span>
+                        </div>
+                        <div class="slds-text-body_small slds-text-color_weak">
+                            ReplayId: {evt.replayId} &nbsp;|&nbsp; UUID: {evt.eventUuid}
+                        </div>
+                    </div>
+
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
